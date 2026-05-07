@@ -87,13 +87,17 @@ chandra-extract-pdf file.pdf --prompt-type ocr
 
 ### Локальный скрипт запуска vLLM
 
-В проект добавлен скрипт `scripts/run-vllm.sh`, который запускает контейнер vLLM с моделью Chandra и дефолтами, подходящими для V100 (dtype `half`):
+В проект добавлен скрипт `scripts/run-vllm.sh`, который запускает контейнер vLLM с моделью Chandra и автоматически подбирает профиль по GPU:
+
+- **H100**: `dtype=bfloat16`, `max_num_seqs=96`, `max_num_batched_tokens=8192`
+- **V100**: `dtype=half`, `max_num_seqs=32`, `max_num_batched_tokens=4096`
+- если GPU не распознан — безопасный generic-профиль (`half`, `32`, `4096`)
 
 ```bash
 ./scripts/run-vllm.sh
 ```
 
-Переопределение параметров через переменные окружения:
+Любой параметр можно переопределить через переменные окружения:
 
 ```bash
 VLLM_DTYPE=half VLLM_MAX_NUM_SEQS=48 VLLM_MAX_NUM_BATCHED_TOKENS=6144 ./scripts/run-vllm.sh
