@@ -113,6 +113,22 @@ VLLM_DTYPE=half VLLM_MAX_NUM_SEQS=48 VLLM_MAX_NUM_BATCHED_TOKENS=6144 ./scripts/
 - создаёт `.venv` (если нет), устанавливает Python-зависимости проекта и `vllm`;
 - создаёт `local.env` из `local.env.example`, если файла ещё нет.
 
+### Тест подбора `--concurrent-sequences`
+
+Для сравнения производительности добавлен скрипт `scripts/benchmark-concurrency.sh`:
+
+```bash
+./scripts/benchmark-concurrency.sh documents/Data1_2_2069_index.pdf 1-8
+```
+
+По умолчанию проверяются значения `1 2 3 4 6 8`, для каждого запускается `chandra-extract-pdf`, а затем выводится сводная таблица и сохраняется файл результатов (`.tsv`) в `outputs/bench_concurrency/`.
+
+Через переменные окружения можно переопределить параметры:
+
+```bash
+CONCURRENCY_LIST="2 4 6" MAX_OUTPUT_TOKENS=4096 RENDER_SCALE=1.5 ./scripts/benchmark-concurrency.sh documents/Data1_2_2069_index.pdf 1-6
+```
+
 ## Структура проекта
 
 ```
